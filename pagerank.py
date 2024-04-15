@@ -60,25 +60,39 @@ def transition_model(corpus, page, damping_factor):
     # Courpus will be given using crawl
 
     N_PAGES = len(list(corpus))
-    result = set()
+    result = dict()
 
-    for file in list(corpus):
-        if file == page:
-            if len(corpus[file]) != 0 :
-                links = list(corpus[file])
-                N_LINKS = len(corpus[file])
 
-                p_self = (1 - damping_factor) / N_PAGES
-                p_link = (1 - p_self) / N_LINKS
+   
+    if len(corpus[page]) != 0 :
+        links = list(corpus[file])
+        N_LINKS = len(corpus[file])
 
-                result[file] = p_self
-                for link in links:
-                    result[link] = p_link
+        rand_prob = (1 - damping_factor) / N_PAGES
+        p_link = damping_factor / N_LINKS
 
+                #for link in links:
+                 #   result[link] = p_link
+
+    else:
+        rand_prob = (1 - damping_factor) / N_PAGES
+
+        p_link = 0
+                
+               # for page in list(corpus):
+                #    result[page] = rand_prob
+    for file in corpus:
+        if len(corpus[page]) == 0:
+            result[file] == 1 / N_PAGES
+        else:
+            if file not in corpus[page]:
+                result[file] = rand_prob
             else:
-                prob = (1 - damping_factor) / N_PAGES
-                for page in list(corpus):
-                    result[page] = prob
+                result[file] = rand_prob + p_link
+
+    if(round(sum(result.values())),5) != 1:
+        raise RuntimeError(f"Error! Prob is {sum(result.values())} thats is differente from 1!")
+    
     return result
 
 
@@ -97,7 +111,7 @@ def sample_pagerank(corpus, damping_factor, n):
     def addToCounter(counter, item):
         pass
 
-    pages = set()
+    pages = dict()
 
     listCorpus = list(corpus)
     for elem in listCorpus:
@@ -111,7 +125,7 @@ def sample_pagerank(corpus, damping_factor, n):
     for i in range(n - 1):
         models = transition_model(corpus, currentPage, damping_factor)
         for model in list(models):
-
+            pass
 
 
 
@@ -128,8 +142,9 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+    pass
 
 
 if __name__ == "__main__":
     main()
+    
