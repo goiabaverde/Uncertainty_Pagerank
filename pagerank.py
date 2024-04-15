@@ -76,16 +76,10 @@ def transition_model(corpus, page, damping_factor):
                     result[link] = p_link
 
             else:
-                prob = 1 / N_PAGES
+                prob = (1 - damping_factor) / N_PAGES
                 for page in list(corpus):
                     result[page] = prob
     return result
-
-
-
-
-
-
 
 
 def sample_pagerank(corpus, damping_factor, n):
@@ -97,7 +91,32 @@ def sample_pagerank(corpus, damping_factor, n):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+    if n < 1:
+        raise TypeError("The number of samples must be at least one")
+    
+    def addToCounter(counter, item):
+        pass
+
+    pages = set()
+
+    listCorpus = list(corpus)
+    for elem in listCorpus:
+        pages.add({elem : 0})
+    
+    firstSample = listCorpus[random.randint(0, len(listCorpus) - 1)]
+    currentPage = firstSample
+    for page in pages:
+        if page == firstSample:
+            pages[page] = pages[page] + 1
+    for i in range(n - 1):
+        models = transition_model(corpus, currentPage, damping_factor)
+        for model in list(models):
+
+
+
+
+
+    
 
 
 def iterate_pagerank(corpus, damping_factor):
