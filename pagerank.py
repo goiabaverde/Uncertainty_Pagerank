@@ -89,7 +89,8 @@ def transition_model(corpus, page, damping_factor):
             else:
                 result[file] = rand_prob + p_link
 
-    
+    if (round(sum(result.values())),5)[0] != float(1):
+        raise RuntimeError(f"Error! Prob is {sum(result.values())} thats is differente from 1!")
     return result
 
 
@@ -119,15 +120,11 @@ def sample_pagerank(corpus, damping_factor, n):
         currentPage = random.choices(list(pagesProbabilities), weights = list(pagesProbabilities.values()), k = 1 )[0]
         pages[currentPage] = pages[currentPage] + 1
 
-       # if page == initialPage:
-       #     pages[page] = pages[page] + 1
-      #  for i in range(n - 1):
-       #     models = transition_model(corpus, currentPage, damping_factor)
-      #  for model in list(models):
-       #     pass
+      
     pages = {key : value/n for key, value in pages.items()}
 
-    
+    if (round(sum(pages.values())),5)[0] != float(1):
+        raise RuntimeError(f"Error! Pagerank sum is {sum(pages.values())} thats is differente from 1!")
     return pages
 
 
@@ -151,6 +148,9 @@ def iterate_pagerank(corpus, damping_factor):
     pr = dict()
 
     def checkIfAllConverged(list):
+        """
+        This function return True if all the Pagerank values for each page converged, if else this function will return False.
+        """
         for value in list.values():
             if value == False:
                 return False
@@ -159,6 +159,9 @@ def iterate_pagerank(corpus, damping_factor):
     
 
     def findPagesThatLink(centralPage):
+        """
+        Return all the pages in a set that link the page what has been putted as the argument.
+        """
         result = set()
         for page in listCorpus:
             if centralPage in corpus[page]:
@@ -187,9 +190,7 @@ def iterate_pagerank(corpus, damping_factor):
                 pr[page] = newValue 
                 if abs(newValue - initialValue) < 0.001:
                     listPagesConverged[page] = True
-            print(f"{page} : {pr[page]}")
-            print(listPagesConverged)
-            print(f"DIFERENça : {abs(newValue - initialValue)}")
+           
     return pr
 
 if __name__ == "__main__":
